@@ -1,0 +1,20 @@
+#!/bin/bash
+
+cat <<EOF
+{
+    "type": "SPEC",
+    "spec": {
+        "title": "Python Custom Script",
+        "type": "object",
+        "properties": {
+            "script": {
+                "type": "code",
+                "language": "python"
+                "default": """
+                return {"status": "ok", "file": "./data.csv", "columns": [{"name": "column_one_name", "type": "VARCHAR"}, {"name": "column_two_name", "type": "BOOLEAN"}]}
+                """
+            }
+        }
+    }
+}
+EOF

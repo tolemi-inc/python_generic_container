@@ -1,6 +1,7 @@
 import json
 import traceback
 import argparse
+import importlib.util
 
 parser = argparse.ArgumentParser(
     description='Process inputs')
@@ -11,12 +12,26 @@ args = parser.parse_args()
 
 
 def run(config):
-    data_file_path = config.data_file_path
-    headers_dict = {'HEADERNAME', 'POSTGRES HEADER TYPE'}
+    #SCRIPT BODY GOES HERE
+    print("HELLO WORLD")
+    print(config.script)
 
-    output_object = {'status': 'ok',
-                     'file_name': data_file_path, 'columns': headers_dict}
-    print('DONE', json.dumps(output_object))
+    #create new python file
+
+    with open('custom_script.py', 'w') as file:
+        # Writing the function definition to the file
+        file.write(f"def script():\n")
+        # Prepending each line in func_body with four spaces for proper indentation
+        indented_body = '\n'.join('    ' + line for line in config.script.split('\n'))
+        file.write(indented_body + '\n')
+
+    spec = importlib.util.spec_from_file_location("custom_script", "./custom_script.py")
+    custom_script = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(custom_script)
+    
+    # Step 3: Execute the script function and capture its output
+    output = custom_script.script()
+    print('DONE', json.dumps(output))
 
 
 def fail(error):
@@ -32,13 +47,12 @@ def fail(error):
 
 def load_config(file_path):
     raw_config = load_json(file_path)
-    # print('RAW CONFIG', raw_config)
+    print('RAW CONFIG', raw_config)
 
     data_file_path = raw_config.get('dataFilePath', None)
+    script = raw_config.get('config').get('script')
 
-    sub_config = raw_config.get('config')
-
-    return Config(data_file_path)
+    return Config(data_file_path, script)
 
 
 def load_json(file_path):
@@ -63,8 +77,9 @@ class ConfigError(Exception):
 
 
 class Config:
-    def __init__(self, data_file_path):
+    def __init__(self, data_file_path, script):
         self.data_file_path = data_file_path
+        self.script = script
 
     @ property
     def data_file_path(self):
@@ -76,6 +91,17 @@ class Config:
             raise ConfigError("Missing data file path in config.")
         else:
             self._data_file_path = value
+
+    @ property
+    def script(self):
+        return self._script
+
+    @ script.setter
+    def script(self, value):
+        if value is None:
+            raise ConfigError("Missing script in config.")
+        else:
+            self._script = value
 
 
 # Main Program

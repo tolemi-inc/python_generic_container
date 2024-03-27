@@ -1,0 +1,6 @@
+{
+    "dataFilePath": "output.csv",
+    "config": {
+        "script": "print('SCRIPT PRINT')"
+    }
+}

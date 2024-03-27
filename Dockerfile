@@ -3,14 +3,14 @@ FROM python:3.9-slim-bookworm
 
 RUN echo $PATH
 
-WORKDIR /opt/SCRIPT_NAME
+WORKDIR /opt/python_generic
 
 #install requirements
-COPY requirements.txt /opt/SCRIPTNAME
+COPY requirements.txt /opt/python_generic
 RUN pip install -r requirements.txt
 
 # copy the script
-COPY SCRIPT_NAME /opt/SCRIPT_NAME
+COPY python_generic /opt/python_generic
 
 # add the script callers to path
-ENV PATH="/opt/zillow_puller/bin:$PATH"
+ENV PATH="/opt/python_generic/bin:$PATH"
