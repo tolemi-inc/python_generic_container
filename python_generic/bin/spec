@@ -9,10 +9,8 @@ cat <<EOF
         "properties": {
             "script": {
                 "type": "code",
-                "language": "python"
-                "default": """
-                return {"status": "ok", "file": "./data.csv", "columns": [{"name": "column_one_name", "type": "VARCHAR"}, {"name": "column_two_name", "type": "BOOLEAN"}]}
-                """
+                "language": "python",
+                "default": "print('STARTING SCRIPT')/nwith open(data_file_path, 'w') as f:/nf.write('good, not good')/nreturn {'status': 'ok', 'file': './data.csv', 'columns': [{'name': 'column_one_name', 'type': 'VARCHAR'}, {'name': 'column_two_name', 'type': 'BOOLEAN'}]}"
             }
         }
     }
