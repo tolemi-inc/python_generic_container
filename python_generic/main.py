@@ -20,7 +20,7 @@ def run(config):
 
     with open('custom_script.py', 'w') as file:
         # Writing the function definition to the file
-        file.write(f"def script():\n")
+        file.write(f"def script(data_file_path):\n")
         # Prepending each line in func_body with four spaces for proper indentation
         indented_body = '\n'.join('    ' + line for line in config.script.split('\n'))
         file.write(indented_body + '\n')
@@ -30,7 +30,7 @@ def run(config):
     spec.loader.exec_module(custom_script)
     
     # Step 3: Execute the script function and capture its output
-    output = custom_script.script()
+    output = custom_script.script(config.data_file_path)
     print('DONE', json.dumps(output))
 
 
