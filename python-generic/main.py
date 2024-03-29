@@ -19,18 +19,14 @@ def run(config):
     #create new python file
 
     with open('custom_script.py', 'w') as file:
-        # Writing the function definition to the file
-        file.write(f"def script(data_file_path):\n")
-        # Prepending each line in func_body with four spaces for proper indentation
-        indented_body = '\n'.join('    ' + line for line in config.script.split('\n'))
-        file.write(indented_body + '\n')
+        file.write(config.script)
 
     spec = importlib.util.spec_from_file_location("custom_script", "./custom_script.py")
     custom_script = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(custom_script)
     
     # Step 3: Execute the script function and capture its output
-    output = custom_script.script(config.data_file_path)
+    output = custom_script.run(config.data_file_path)
     print('DONE', json.dumps(output))
 
 
