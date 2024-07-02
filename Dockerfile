@@ -10,7 +10,7 @@ COPY requirements.txt /opt/python_generic
 RUN pip install -r requirements.txt
 
 # copy the script
-COPY python_generic /opt/python_generic
+COPY python-generic /opt/python_generic
 
 # add the script callers to path
 ENV PATH="/opt/python_generic/bin:$PATH"
