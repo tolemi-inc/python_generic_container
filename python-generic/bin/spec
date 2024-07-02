@@ -1,18 +1,5 @@
 #!/bin/bash
+PULLER_SCRIPT_PATH="$(dirname "$0")"
+PULLER_SCRIPT="$PULLER_SCRIPT_PATH/../spec.py"
 
-cat <<EOF
-{
-    "type": "SPEC",
-    "spec": {
-        "title": "Python Custom Script",
-        "type": "object",
-        "properties": {
-            "script": {
-                "type": "code",
-                "language": "python",
-                "defaultValue": "def run():\n   print('STARTING SCRIPT')\n  with open(data_file_path, 'w') as f:\n      f.write('good, not good')\n    return {'status': 'ok', 'file': './data.csv', 'columns': [{'name': 'column_one_name', 'type': 'VARCHAR'}, {'name': 'column_two_name', 'type': 'BOOLEAN'}]}"
-            }
-        }
-    }
-}
-EOF
+python3 $PULLER_SCRIPT
