@@ -3,14 +3,15 @@ FROM python:3.9-slim-bookworm
 
 RUN echo $PATH
 
-WORKDIR /opt/python_generic
+WORKDIR /opt/python-generic
 
 #install requirements
-COPY requirements.txt /opt/python_generic
+COPY requirements.txt /opt/python-generic
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # copy the script
-COPY python_generic /opt/python_generic
+COPY python-generic /opt/python-generic
 
 # add the script callers to path
-ENV PATH="/opt/python_generic/bin:$PATH"
+ENV PATH="/opt/python-generic/bin:$PATH"
