@@ -2,6 +2,7 @@ import json
 import traceback
 import argparse
 import importlib.util
+from aws import get_secret
 
 parser = argparse.ArgumentParser(
     description='Process inputs')
@@ -12,21 +13,18 @@ args = parser.parse_args()
 
 
 def run(config):
-    #SCRIPT BODY GOES HERE
-    print("HELLO WORLD")
-    print(config.script)
-
-    #create new python file
-
+    # create new python file
     with open('custom_script.py', 'w') as file:
         file.write(config.script)
 
-    spec = importlib.util.spec_from_file_location("custom_script", "./custom_script.py")
+    spec = importlib.util.spec_from_file_location(
+        "custom_script", "./custom_script.py")
     custom_script = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(custom_script)
-    
+
     # Step 3: Execute the script function and capture its output
-    output = custom_script.run(config.data_file_path)
+    output = custom_script.run({'data_file_path': config.data_file_path,
+                               'city_alias': config.city_alias, 'aws_creds': config.aws_creds})
     print('DONE', json.dumps(output))
 
 
@@ -47,8 +45,13 @@ def load_config(file_path):
 
     data_file_path = raw_config.get('dataFilePath', None)
     script = raw_config.get('config').get('script')
+    aws_access_key = raw_config.get('env').get('aws.accessKeyId')
+    aws_secret_key = raw_config.get('env').get('aws.secretKey')
+    aws_creds = {'aws_secret_key': aws_secret_key,
+                 'aws_access_key_id': aws_access_key}
+    city_alias = raw_config.get('cityAlias')
 
-    return Config(data_file_path, script)
+    return Config(data_file_path, script, aws_creds, city_alias)
 
 
 def load_json(file_path):
@@ -73,31 +76,55 @@ class ConfigError(Exception):
 
 
 class Config:
-    def __init__(self, data_file_path, script):
+    def __init__(self, data_file_path, script, aws_creds, city_alias):
         self.data_file_path = data_file_path
         self.script = script
+        self.aws_creds = aws_creds
+        self.city_alias = city_alias
 
-    @ property
+    @property
     def data_file_path(self):
         return self._data_file_path
 
-    @ data_file_path.setter
+    @data_file_path.setter
     def data_file_path(self, value):
         if value is None:
             raise ConfigError("Missing data file path in config.")
         else:
             self._data_file_path = value
 
-    @ property
+    @property
     def script(self):
         return self._script
 
-    @ script.setter
+    @script.setter
     def script(self, value):
         if value is None:
             raise ConfigError("Missing script in config.")
         else:
             self._script = value
+
+    @property
+    def aws_creds(self):
+        return self._aws_creds
+
+    @aws_creds.setter
+    def aws_creds(self, value):
+        if value is None:
+            raise ConfigError("Missing aws credentials in env.")
+        else:
+            self._aws_creds = value
+
+    @property
+    def city_alias(self):
+        return self._city_alias
+
+    @city_alias.setter
+    def city_alias(self, value):
+        if value is None:
+            raise ConfigError("Missing city alias.")
+        else:
+            self._city_alias = value
 
 
 # Main Program
