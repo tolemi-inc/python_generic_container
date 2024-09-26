@@ -1,6 +1,11 @@
 {
     "dataFilePath": "output.csv",
+    "cityAlias": "test-alias",
     "config": {
-        "script": "print('SCRIPT PRINT')"
+        "script": "def run(config): print(config)"
+    },
+    "env": {
+        "aws.accessKeyId": "test",
+        "aws.secretKey": "test"
     }
 }
