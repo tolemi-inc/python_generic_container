@@ -10,6 +10,9 @@ COPY requirements.txt /opt/python-generic
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+RUN pip install playwright
+RUN playwright install --with-deps
+
 # copy the script
 COPY python-generic /opt/python-generic
 

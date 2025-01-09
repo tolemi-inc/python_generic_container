@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#!/bin/bash
+
 cat <<EOF
 {
     "type": "SPEC",
@@ -9,9 +11,12 @@ cat <<EOF
         "properties": {
             "script": {
                 "type": "code",
-                "language": "python",
-                "defaultValue": "#available libraries: bs4\r\n#the container calls the run function with the argument data_file_path, which defines the location where the csv dataset must be located when the puller is done\r\ndef run(config):\r\n\t    from aws import get_secret\r\n    \tget_secret(config, \'test\')\r\n    \tprint(\'STARTING\')\r\n    \twith open(config[\'data_file_path\'], \'w\') as f:\r\n        \t\tf.write(\'we love sodium bentanite, TRUE\')\r\n    \treturn {\'status\': \'ok\', \'file\': config[\'data_file_path\'], \'columns\': [{\'name\': \'column_one_name\', \'type\': \'VARCHAR\'}, {\'name\': \'column_two_name\', \'type\': \'BOOLEAN\'}]}"        
-            }        
-        }    
-    }}
+                "custom": {
+                "language": "python"
+                },
+                "defaultValue": "#available libraries: bs4\n#the container calls the run function with the argument data_file_path, which defines the location where the csv dataset must be located when the puller is done\ndef run(config):\n    from aws import get_secret\n    get_secret(config, 'test')\n    print('STARTING')\n    with open(config['data_file_path'], 'w') as f:\n        f.write('we love sodium bentanite, TRUE')\n    return {'status': 'ok', 'file': config['data_file_path'], 'columns': [{'name': 'column_one_name', 'type': 'VARCHAR'}, {'name': 'column_two_name', 'type': 'BOOLEAN'}]}"
+            }
+        }
+    }
+}
 EOF
