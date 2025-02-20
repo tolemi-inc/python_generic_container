@@ -23,8 +23,7 @@ def run(config):
     spec.loader.exec_module(custom_script)
 
     # Step 3: Execute the script function and capture its output
-    output = custom_script.run({'data_file_path': config.data_file_path,
-                               'city_alias': config.city_alias, 'aws_creds': config.aws_creds})
+    output = custom_script.run(config)
     print('DONE', json.dumps(output))
 
 
@@ -49,8 +48,9 @@ def load_config(file_path):
     aws_creds = {'aws_secret_key': aws_secret_key,
                  'aws_access_key_id': aws_access_key}
     city_alias = raw_config.get('cityAlias')
+    instance_bounding_box = raw_config.get('boundingBox')
 
-    return Config(data_file_path, script, aws_creds, city_alias)
+    return Config(data_file_path, script, aws_creds, city_alias, instance_bounding_box)
 
 
 def load_json(file_path):
@@ -75,11 +75,12 @@ class ConfigError(Exception):
 
 
 class Config:
-    def __init__(self, data_file_path, script, aws_creds, city_alias):
+    def __init__(self, data_file_path, script, aws_creds, city_alias, instance_bounding_box):
         self.data_file_path = data_file_path
         self.script = script
         self.aws_creds = aws_creds
         self.city_alias = city_alias
+        self.instance_bounding_box = instance_bounding_box
 
     @property
     def data_file_path(self):
