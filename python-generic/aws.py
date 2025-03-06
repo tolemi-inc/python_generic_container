@@ -15,11 +15,11 @@ def set_aws_credentials(aws_access_key_id, aws_secret_access_key):
 
 def get_secret(config, secret_name):
     #get relevant config fields
-    aws_credentials = config['aws_creds']
-    city_alias = config['city_alias']
+    aws_credentials = config.aws_creds
+    city_alias = config.city_alias
 
     #retrieve secret with value
-    client = set_aws_credentials(aws_credentials['aws_access_key_id'], aws_credentials['aws_secret_key'])
+    client = set_aws_credentials(aws_credentials.aws_access_key_id, aws_credentials.aws_secret_key)
     secret = client.get_secret_value(SecretId = f'cities/{city_alias}/{secret_name}')
     return secret
 
