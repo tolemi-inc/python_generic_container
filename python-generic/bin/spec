@@ -7,6 +7,7 @@ cat <<EOF
     "type": "SPEC",
     "spec": {
         "title": "Python Custom Script",
+        "version": "1.0.0",
         "type": "object",
         "properties": {
             "script": {
