@@ -75,6 +75,8 @@ class ConfigError(Exception):
 
 
 class Config:
+    KEYS = ['data_file_path', 'script', 'aws_creds', 'city_alias', 'instance_bounding_box']
+    
     def __init__(self, data_file_path, script, aws_creds, city_alias, instance_bounding_box):
         self.data_file_path = data_file_path
         self.script = script
@@ -90,8 +92,7 @@ class Config:
     def data_file_path(self, value):
         if value is None:
             raise ConfigError("Missing data file path in config.")
-        else:
-            self._data_file_path = value
+        self._data_file_path = value
 
     @property
     def script(self):
@@ -101,8 +102,7 @@ class Config:
     def script(self, value):
         if value is None:
             raise ConfigError("Missing script in config.")
-        else:
-            self._script = value
+        self._script = value
 
     @property
     def aws_creds(self):
@@ -112,19 +112,20 @@ class Config:
     def aws_creds(self, value):
         if value is None:
             raise ConfigError("Missing aws credentials in env.")
-        else:
-            self._aws_creds = value
+        self._aws_creds = value
 
-    @property
-    def city_alias(self):
-        return self._city_alias
+    # Dictionary-like access
+    def __getitem__(self, key):
+        if key in Config.KEYS:
+            return getattr(self, key)
+        raise KeyError(f"Key '{key}' not found.")
 
-    @city_alias.setter
-    def city_alias(self, value):
-        if value is None:
-            raise ConfigError("Missing city alias.")
+    def __setitem__(self, key, value):
+        if key in Config.KEYS:
+            setattr(self, key, value)
         else:
-            self._city_alias = value
+            raise KeyError(f"Key '{key}' not found.")
+
 
 
 # Main Program
