@@ -126,6 +126,21 @@ class Config:
         else:
             self._city_alias = value
 
+    # Allow dict-like access for init attributes
+    def __getitem__(self, key):
+        # Map keys to properties/attributes
+        if key in ['data_file_path', 'script', 'aws_creds', 'city_alias', 'instance_bounding_box']:
+            return getattr(self, key)
+        else:
+            raise KeyError(f"Key '{key}' not found.")
+
+    # Allow dict-like assignment as well
+    def __setitem__(self, key, value):
+        if key in ['data_file_path', 'script', 'aws_creds', 'city_alias', 'instance_bounding_box']:
+            setattr(self, key, value)
+        else:
+            raise KeyError(f"Key '{key}' not found.")
+
 
 # Main Program
 if __name__ == "__main__":
