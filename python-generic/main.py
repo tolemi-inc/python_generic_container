@@ -75,7 +75,7 @@ class ConfigError(Exception):
 
 
 class Config:
-    KEYS = ['data_file_path', 'script', 'aws_creds', 'city_alias', 'instance_bounding_box']
+    KEYS = ['data_file_path', 'script', 'aws_creds', 'city_alias', 'instance_bounding_box', 'raw_config']
     
     def __init__(self, data_file_path, script, aws_creds, city_alias, instance_bounding_box, raw_config=None):
         self.data_file_path = data_file_path
