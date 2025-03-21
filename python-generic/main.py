@@ -50,7 +50,7 @@ def load_config(file_path):
     city_alias = raw_config.get('cityAlias')
     instance_bounding_box = raw_config.get('boundingBox')
 
-    return Config(data_file_path, script, aws_creds, city_alias, instance_bounding_box)
+    return Config(data_file_path, script, aws_creds, city_alias, instance_bounding_box, raw_config=raw_config)
 
 
 def load_json(file_path):
@@ -77,12 +77,13 @@ class ConfigError(Exception):
 class Config:
     KEYS = ['data_file_path', 'script', 'aws_creds', 'city_alias', 'instance_bounding_box']
     
-    def __init__(self, data_file_path, script, aws_creds, city_alias, instance_bounding_box):
+    def __init__(self, data_file_path, script, aws_creds, city_alias, instance_bounding_box, raw_config=None):
         self.data_file_path = data_file_path
         self.script = script
         self.aws_creds = aws_creds
         self.city_alias = city_alias
         self.instance_bounding_box = instance_bounding_box
+        self.raw_config = raw_config
 
     @property
     def data_file_path(self):
