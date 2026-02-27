@@ -42,9 +42,17 @@ def load_config(file_path):
     raw_config = load_json(file_path)
 
     data_file_path = raw_config.get('dataFilePath', None)
-    script = raw_config.get('config').get('script')
-    aws_access_key = raw_config.get('env').get('aws.accessKeyId')
-    aws_secret_key = raw_config.get('env').get('aws.secretKey')
+
+    config_section = raw_config.get('config')
+    if config_section is None:
+        raise ConfigError("Missing 'config' section in config file.")
+    script = config_section.get('script')
+
+    env_section = raw_config.get('env')
+    if env_section is None:
+        raise ConfigError("Missing 'env' section in config file.")
+    aws_access_key = env_section.get('aws.accessKeyId')
+    aws_secret_key = env_section.get('aws.secretKey')
     aws_creds = {'aws_secret_key': aws_secret_key,
                  'aws_access_key_id': aws_access_key}
     city_alias = raw_config.get('cityAlias')
@@ -59,14 +67,11 @@ def load_json(file_path):
             data = json.load(file)
         return data
     except FileNotFoundError:
-        True
-        print(f"File '{file_path}' not found.")
+        raise ConfigError(f"Config file '{file_path}' not found.")
     except json.JSONDecodeError as e:
-        True
-        print(f"JSON decoding error: {e}")
+        raise ConfigError(f"Invalid JSON in config file: {e}")
     except Exception as e:
-        True
-        print(f"An error occurred: {e}")
+        raise ConfigError(f"Failed to read config file: {e}")
 
 
 class ConfigError(Exception):
@@ -135,4 +140,6 @@ if __name__ == "__main__":
         config = load_config(args.config)
         run(config)
     except ConfigError as e:
+        fail(e)
+    except Exception as e:
         fail(e)
