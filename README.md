@@ -1,3 +1,5 @@
+**This have been archived and moved to <https://github.com/tolemi-inc/angel/tree/main/angel/pullers/python_generic>**
+
 # container_template
 Template to containerize a script for swarm. Scripts in any language can be containerized according to this general pattern, but this repo and guide are primarily concerned with containerizing Python.
 
